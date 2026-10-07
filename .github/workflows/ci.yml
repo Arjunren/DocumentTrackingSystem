@@ -1,0 +1,14 @@
+name: CI
+on: [push, pull_request]
+permissions: { contents: read }
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with: { dotnet-version: '10.0.x' }
+      - run: dotnet restore Documents.slnx
+      - run: dotnet build Documents.slnx -c Release --no-restore
+      - run: dotnet test Documents.slnx -c Release --no-build
+      - run: dotnet list Documents.slnx package --vulnerable --include-transitive
